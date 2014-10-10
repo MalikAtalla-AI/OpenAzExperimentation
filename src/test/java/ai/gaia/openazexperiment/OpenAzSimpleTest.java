@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openliberty.openaz.azapi.pep.PepAgent;
 import org.openliberty.openaz.azapi.pep.PepAgentFactory;
-import org.openliberty.openaz.azapi.pep.PepResponse;
 import org.openliberty.openaz.pdp.sunxacml.FileSystemPolicyLoader;
 import org.openliberty.openaz.pdp.sunxacml.SunXacmlService;
 import org.openliberty.openaz.pep.PepAgentFactoryImpl;
@@ -46,15 +45,30 @@ public class OpenAzSimpleTest {
 	}
 
 	@Test
-	public void testPermit(){
-		PepResponse response = getPepAgent().simpleDecide("Julius Hibbert","read", "http://medico.com/record/patient/BartSimpson");
-		Assert.assertEquals(true, response.allowed());
+	public void testAllPermit(){
+		String personWithAllAccess = "Amit Nath";
+		Assert.assertEquals(true, getPepAgent().simpleDecide(personWithAllAccess,"GET", "/api/v1/projects").allowed());
+		Assert.assertEquals(true, getPepAgent().simpleDecide(personWithAllAccess,"PUT", "/api/v1/projects/e5354e0e-1fa5-4749-ac6e-089fd43a0c31").allowed());
+		Assert.assertEquals(true, getPepAgent().simpleDecide(personWithAllAccess,"POST", "/api/v1/projects").allowed());
+		Assert.assertEquals(true, getPepAgent().simpleDecide(personWithAllAccess,"DELETE", "/api/v1/projects/e5354e0e-1fa5-4749-ac6e-089fd43a0c31").allowed());
 	}
 	
 	@Test
-	public void testDeny(){
-		PepResponse response = getPepAgent().simpleDecide("Millhouse van Houten","read", "http://medico.com/record/patient/BartSimpson");
-		Assert.assertEquals(false, response.allowed());
+	public void testAllDeny(){
+		String personWithNoAccess = "Lisa S.";
+		Assert.assertEquals(false, getPepAgent().simpleDecide(personWithNoAccess,"GET", "/api/v1/projects").allowed());
+		Assert.assertEquals(false, getPepAgent().simpleDecide(personWithNoAccess,"PUT", "/api/v1/projects/e5354e0e-1fa5-4749-ac6e-089fd43a0c31").allowed());
+		Assert.assertEquals(false, getPepAgent().simpleDecide(personWithNoAccess,"POST", "/api/v1/projects").allowed());
+		Assert.assertEquals(false, getPepAgent().simpleDecide(personWithNoAccess,"DELETE", "/api/v1/projects/e5354e0e-1fa5-4749-ac6e-089fd43a0c31").allowed());
+	}
+	
+	@Test
+	public void testOnlyViewingAndEditingPermitted(){
+		String personWithNoAccess = "Sarah Edmonds";
+		Assert.assertEquals(true, getPepAgent().simpleDecide(personWithNoAccess,"GET", "/api/v1/projects").allowed());
+		Assert.assertEquals(true, getPepAgent().simpleDecide(personWithNoAccess,"PUT", "/api/v1/projects/e5354e0e-1fa5-4749-ac6e-089fd43a0c31").allowed());
+		Assert.assertEquals(false, getPepAgent().simpleDecide(personWithNoAccess,"POST", "/api/v1/projects").allowed());
+		Assert.assertEquals(false, getPepAgent().simpleDecide(personWithNoAccess,"DELETE", "/api/v1/projects/e5354e0e-1fa5-4749-ac6e-089fd43a0c31").allowed());
 	}
 
 }
