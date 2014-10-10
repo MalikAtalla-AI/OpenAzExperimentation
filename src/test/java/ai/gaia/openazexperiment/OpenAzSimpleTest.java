@@ -44,12 +44,17 @@ public class OpenAzSimpleTest {
 	private PepAgent getPepAgent() {
 		return pepAgentFactory.getPepAgent();
 	}
-	
+
 	@Test
 	public void testPermit(){
 		PepResponse response = getPepAgent().simpleDecide("Julius Hibbert","read", "http://medico.com/record/patient/BartSimpson");
-		Assert.assertNotNull(response);
 		Assert.assertEquals(true, response.allowed());
+	}
+	
+	@Test
+	public void testDeny(){
+		PepResponse response = getPepAgent().simpleDecide("Millhouse van Houten","read", "http://medico.com/record/patient/BartSimpson");
+		Assert.assertEquals(false, response.allowed());
 	}
 
 }

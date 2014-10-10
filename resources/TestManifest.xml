@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<am:Attributes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:am="http://www.openliberty.org/openaz/attribute-manifest">
+	<am:Attribute pre-load="true">
+		<am:Id>urn:oasis:names:tc:xacml:1.0:subject:role-id</am:Id>
+		<am:XacmlType>http://www.w3.org/2001/XMLSchema#string</am:XacmlType>
+		<am:Category>urn:oasis:names:tc:xacml:1.0:subject-category:access-subject</am:Category>
+		<am:AttributeAccessorKey>RoleAccessor</am:AttributeAccessorKey>
+		<am:DependentAttributes>
+			<am:DependentAttribute key="subjectId">
+				<am:Id>urn:oasis:names:tc:xacml:1.0:subject:subject-id</am:Id>
+				<am:XacmlType>http://www.w3.org/2001/XMLSchema#string</am:XacmlType>
+				<am:Category>urn:oasis:names:tc:xacml:1.0:subject-category:access-subject</am:Category>
+			</am:DependentAttribute>
+		</am:DependentAttributes>
+	</am:Attribute>
+</am:Attributes>
