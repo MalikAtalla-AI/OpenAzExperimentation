@@ -45,30 +45,36 @@ public class OpenAzSimpleTest {
 	}
 
 	@Test
-	public void testAllPermit(){
+	public void requestAccessToProjectAPI_FullAccess_Permit(){
 		String personWithAllAccess = "Amit Nath";
 		Assert.assertEquals(true, getPepAgent().simpleDecide(personWithAllAccess,"GET", "/api/v1/projects").allowed());
 		Assert.assertEquals(true, getPepAgent().simpleDecide(personWithAllAccess,"PUT", "/api/v1/projects/e5354e0e-1fa5-4749-ac6e-089fd43a0c31").allowed());
 		Assert.assertEquals(true, getPepAgent().simpleDecide(personWithAllAccess,"POST", "/api/v1/projects").allowed());
 		Assert.assertEquals(true, getPepAgent().simpleDecide(personWithAllAccess,"DELETE", "/api/v1/projects/e5354e0e-1fa5-4749-ac6e-089fd43a0c31").allowed());
+		
+		Assert.assertEquals(false, getPepAgent().simpleDecide(personWithAllAccess,"GET", "/api/v1/specimens").allowed());
 	}
 	
 	@Test
-	public void testAllDeny(){
+	public void requestAccessToProjectAPI_NoAccess_Deny(){
 		String personWithNoAccess = "Lisa S.";
 		Assert.assertEquals(false, getPepAgent().simpleDecide(personWithNoAccess,"GET", "/api/v1/projects").allowed());
 		Assert.assertEquals(false, getPepAgent().simpleDecide(personWithNoAccess,"PUT", "/api/v1/projects/e5354e0e-1fa5-4749-ac6e-089fd43a0c31").allowed());
 		Assert.assertEquals(false, getPepAgent().simpleDecide(personWithNoAccess,"POST", "/api/v1/projects").allowed());
 		Assert.assertEquals(false, getPepAgent().simpleDecide(personWithNoAccess,"DELETE", "/api/v1/projects/e5354e0e-1fa5-4749-ac6e-089fd43a0c31").allowed());
+		
+		Assert.assertEquals(false, getPepAgent().simpleDecide(personWithNoAccess,"GET", "/api/v1/specimens").allowed());
 	}
 	
 	@Test
-	public void testOnlyViewingAndEditingPermitted(){
-		String personWithNoAccess = "Sarah Edmonds";
-		Assert.assertEquals(true, getPepAgent().simpleDecide(personWithNoAccess,"GET", "/api/v1/projects").allowed());
-		Assert.assertEquals(true, getPepAgent().simpleDecide(personWithNoAccess,"PUT", "/api/v1/projects/e5354e0e-1fa5-4749-ac6e-089fd43a0c31").allowed());
-		Assert.assertEquals(false, getPepAgent().simpleDecide(personWithNoAccess,"POST", "/api/v1/projects").allowed());
-		Assert.assertEquals(false, getPepAgent().simpleDecide(personWithNoAccess,"DELETE", "/api/v1/projects/e5354e0e-1fa5-4749-ac6e-089fd43a0c31").allowed());
+	public void requestAccessToProjectAPI_RUAccess_PermitAccordingly(){
+		String personWithRUaccess = "Sarah Edmonds";
+		Assert.assertEquals(true, getPepAgent().simpleDecide(personWithRUaccess,"GET", "/api/v1/projects").allowed());
+		Assert.assertEquals(true, getPepAgent().simpleDecide(personWithRUaccess,"PUT", "/api/v1/projects/e5354e0e-1fa5-4749-ac6e-089fd43a0c31").allowed());
+		Assert.assertEquals(false, getPepAgent().simpleDecide(personWithRUaccess,"POST", "/api/v1/projects").allowed());
+		Assert.assertEquals(false, getPepAgent().simpleDecide(personWithRUaccess,"DELETE", "/api/v1/projects/e5354e0e-1fa5-4749-ac6e-089fd43a0c31").allowed());
+		
+		Assert.assertEquals(false, getPepAgent().simpleDecide(personWithRUaccess,"GET", "/api/v1/specimens").allowed());
 	}
 
 }
