@@ -20,8 +20,8 @@ public class DummyRoleAccessor implements GenericAttributeAccessor {
 	private static final Log log = LogFactory.getLog(DummyRoleAccessor.class);
 	
 	static{
-		props.setProperty("Julius Hibbert", "Physician");
-		props.setProperty("Edna Krabappel", "Teacher");
+		props.setProperty("Friedbert Hamilton", "Beginner");
+		props.setProperty("Sarah Edmonds", "Technician");
 	}
 	
 	public AttributeValue<String> retrieveAttribute(

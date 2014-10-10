@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openliberty.openaz.azapi.pep.PepAgent;
 import org.openliberty.openaz.azapi.pep.PepAgentFactory;
-import org.openliberty.openaz.azapi.pep.PepResponse;
 import org.openliberty.openaz.pdp.sunxacml.FileSystemPolicyLoader;
 import org.openliberty.openaz.pdp.sunxacml.SunXacmlService;
 import org.openliberty.openaz.pep.PepAgentFactoryImpl;
@@ -67,19 +66,43 @@ public class OpenAzPipTest {
 	}
 
 	@Test
-	public void testPermit() {
-		PepResponse response = getPepAgent().simpleDecide("Julius Hibbert", "read",
-				"http://medico.com/record/patient/BartSimpson");
-		Assert.assertNotNull(response);
-		Assert.assertEquals(true, response.allowed());
+	public void requestAccess_UnknownPerson_Deny() {
+		String unkownPerson = "Jimmy James Georgetown";
+		Assert.assertEquals(false, getPepAgent().simpleDecide(unkownPerson, "GET","/api/v1/results").allowed());
+		Assert.assertEquals(false, getPepAgent().simpleDecide(unkownPerson, "GET","/api/v1/specimens").allowed());
+		Assert.assertEquals(false, getPepAgent().simpleDecide(unkownPerson, "GET","/api/v1/samplinglocations").allowed());
+		Assert.assertEquals(false, getPepAgent().simpleDecide(unkownPerson, "PUT","/api/v1/results").allowed());
+		Assert.assertEquals(false, getPepAgent().simpleDecide(unkownPerson, "POST","/api/v1/specimens").allowed());
+		Assert.assertEquals(false, getPepAgent().simpleDecide(unkownPerson, "DELETE","/api/v1/samplinglocations").allowed());
 	}
 
 	@Test
-	public void testDeny() {
-		PepResponse response = getPepAgent().simpleDecide("Seymour Skinner", "read",
-				"http://medico.com/record/patient/BartSimpson");
-		Assert.assertNotNull(response);
-		Assert.assertEquals(false, response.allowed());
+	public void requestViewAccess_Beginner_Permit() {
+		String beginnersName = "Friedbert Hamilton";
+		Assert.assertEquals(true, getPepAgent().simpleDecide(beginnersName, "GET","/api/v1/results").allowed());
+		Assert.assertEquals(true, getPepAgent().simpleDecide(beginnersName, "GET","/api/v1/specimens").allowed());
+		Assert.assertEquals(true, getPepAgent().simpleDecide(beginnersName, "GET","/api/v1/samplinglocations").allowed());
+		
+		Assert.assertEquals(false, getPepAgent().simpleDecide(beginnersName, "PUT","/api/v1/results").allowed());
+		Assert.assertEquals(false, getPepAgent().simpleDecide(beginnersName, "POST","/api/v1/specimens").allowed());
+		Assert.assertEquals(false, getPepAgent().simpleDecide(beginnersName, "DELETE","/api/v1/samplinglocations").allowed());
+	}
+
+	@Test
+	public void requestViewAccess_Technician_Permit() {
+		String beginnersName = "Sarah Edmonds";
+		Assert.assertEquals(true, getPepAgent().simpleDecide(beginnersName, "GET","/api/v1/results").allowed());
+		Assert.assertEquals(true, getPepAgent().simpleDecide(beginnersName, "GET","/api/v1/specimens").allowed());
+		Assert.assertEquals(true, getPepAgent().simpleDecide(beginnersName, "GET","/api/v1/samplinglocations").allowed());
+	}
+
+	@Test
+	public void requestCRUDActivities_Technician_Permit() {
+		String beginnersName = "Sarah Edmonds";
+		Assert.assertEquals(true, getPepAgent().simpleDecide(beginnersName, "GET","/api/v1/activities").allowed());
+		Assert.assertEquals(true, getPepAgent().simpleDecide(beginnersName, "POST","/api/v1/activities").allowed());
+		Assert.assertEquals(true, getPepAgent().simpleDecide(beginnersName, "PUT","/api/v1/activities/UUID123").allowed());
+		Assert.assertEquals(true, getPepAgent().simpleDecide(beginnersName, "DELETE","/api/v1/activities/UUIDabc").allowed());
 	}
 
 }
