@@ -80,12 +80,24 @@ public class OpenAzPipTest {
 	public void requestViewAccess_Beginner_Permit() {
 		String beginnersName = "Friedbert Hamilton";
 		Assert.assertEquals(true, getPepAgent().simpleDecide(beginnersName, "GET","/api/v1/results").allowed());
-		Assert.assertEquals(true, getPepAgent().simpleDecide(beginnersName, "GET","/api/v1/specimens").allowed());
 		Assert.assertEquals(true, getPepAgent().simpleDecide(beginnersName, "GET","/api/v1/samplinglocations").allowed());
+		Assert.assertEquals(true, getPepAgent().simpleDecide(beginnersName, "GET","/api/v1/specimens").allowed());
 		
 		Assert.assertEquals(false, getPepAgent().simpleDecide(beginnersName, "PUT","/api/v1/results").allowed());
 		Assert.assertEquals(false, getPepAgent().simpleDecide(beginnersName, "POST","/api/v1/specimens").allowed());
 		Assert.assertEquals(false, getPepAgent().simpleDecide(beginnersName, "DELETE","/api/v1/samplinglocations").allowed());
+	}
+
+	@Test
+	public void requestViewTenants_Beginner_Deny() {
+		String beginnersName = "Friedbert Hamilton";
+		Assert.assertEquals(false, getPepAgent().simpleDecide(beginnersName, "GET","/api/v1/tenants").allowed());
+	}
+	
+	@Test
+	public void requestViewUsers_Beginner_Deny() {
+		String beginnersName = "Friedbert Hamilton";
+		Assert.assertEquals(false, getPepAgent().simpleDecide(beginnersName, "GET","/api/v1/users").allowed());
 	}
 
 	@Test
