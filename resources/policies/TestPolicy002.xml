@@ -5,7 +5,7 @@
       PolicyId="urn:oasis:names:tc:xacml:1.0:conformance-test:IIA2:policy"
       RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
     <Description>
-        Policy for Conformance Test IIA001.
+        Sample policy for WI-230 (Authorization - Define Policies)
     </Description>
     <Target/>
     <Rule
